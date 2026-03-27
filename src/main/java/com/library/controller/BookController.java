@@ -18,7 +18,6 @@ public class BookController {
 
     private final BookRepository bookRepository;
 
-    // Search books by name or author (for Book Available screen)
     @GetMapping("/search")
     public ResponseEntity<?> searchBooks(
             @RequestParam(required = false) String name,
@@ -44,7 +43,6 @@ public class BookController {
         );
     }
 
-    // Get all books (for Master List report)
     @GetMapping
     public ResponseEntity<?> getAllBooks(@RequestParam(defaultValue = "BOOK") String type) {
         List<Book> books = bookRepository.findByType(type);
@@ -59,7 +57,6 @@ public class BookController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // Add book/movie (Admin only)
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> addBook(@RequestBody Book book) {
@@ -69,7 +66,6 @@ public class BookController {
             );
         }
 
-        // Auto-generate serial number
         String prefix = generateSerialPrefix(book.getCategory(), book.getType());
         long count = bookRepository.countBySerialNoStartingWith(prefix);
         int copies = book.getTotalCopies() != null ? book.getTotalCopies() : 1;
@@ -100,7 +96,6 @@ public class BookController {
         );
     }
 
-    // Update book (Admin only)
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> updateBook(@PathVariable String id, @RequestBody Book updated) {

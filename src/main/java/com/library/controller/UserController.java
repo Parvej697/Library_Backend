@@ -24,7 +24,6 @@ public class UserController {
     @GetMapping
     public ResponseEntity<?> getAllUsers() {
         List<User> users = userRepository.findAll();
-        // Clear passwords before sending
         users.forEach(u -> u.setPassword(null));
         return ResponseEntity.ok(ApiResponse.builder().success(true).data(users).build());
     }

@@ -22,7 +22,6 @@ public class IssueController {
     private final IssueRepository issueRepository;
     private final BookRepository bookRepository;
 
-    // Issue a book
     @PostMapping("/issue")
     public ResponseEntity<?> issueBook(@RequestBody Map<String, Object> req) {
         String serialNo    = (String) req.get("bookSerialNo");
@@ -37,7 +36,6 @@ public class IssueController {
             );
         }
 
-        // Check book exists and is available
         Book book = bookRepository.findBySerialNo(serialNo).orElse(null);
         if (book == null) {
             return ResponseEntity.badRequest().body(
@@ -50,7 +48,6 @@ public class IssueController {
             );
         }
 
-        // Check already issued to this member
         boolean alreadyIssued = issueRepository
                 .findByMembershipIdAndStatus(membershipId, "ISSUED")
                 .stream().anyMatch(i -> i.getBookSerialNo().equals(serialNo));
@@ -63,7 +60,6 @@ public class IssueController {
         LocalDate issueDate  = issueDateStr != null ? LocalDate.parse(issueDateStr) : LocalDate.now();
         LocalDate returnDate = returnDateStr != null ? LocalDate.parse(returnDateStr) : issueDate.plusDays(15);
 
-        // Validate: issue date not in past, return max 15 days
         if (issueDate.isBefore(LocalDate.now())) {
             return ResponseEntity.badRequest().body(
                     ApiResponse.builder().success(false).message("Issue date cannot be in the past").build()
@@ -100,7 +96,6 @@ public class IssueController {
         );
     }
 
-    // Return a book (goes to Pay Fine screen)
     @PostMapping("/return")
     public ResponseEntity<?> returnBook(@RequestBody Map<String, Object> req) {
         String serialNo    = (String) req.get("bookSerialNo");
@@ -123,7 +118,6 @@ public class IssueController {
         LocalDate actualReturnDate = returnDateStr != null
                 ? LocalDate.parse(returnDateStr) : LocalDate.now();
 
-        // Calculate fine: Rs 5/day after expected return date
         double fine = 0.0;
         if (actualReturnDate.isAfter(issue.getExpectedReturnDate())) {
             long overdueDays = ChronoUnit.DAYS.between(issue.getExpectedReturnDate(), actualReturnDate);
@@ -133,7 +127,6 @@ public class IssueController {
         issue.setActualReturnDate(actualReturnDate);
         issue.setFineCalculated(fine);
         issue.setRemarks(remarks);
-        // Don't mark as RETURNED yet — user must go through Pay Fine screen
         issue.setStatus(fine > 0 ? "PENDING_FINE" : "PENDING_RETURN");
         issueRepository.save(issue);
 
@@ -142,7 +135,6 @@ public class IssueController {
         );
     }
 
-    // Pay fine and complete return
     @PostMapping("/pay-fine/{issueId}")
     public ResponseEntity<?> payFine(@PathVariable String issueId,
                                      @RequestBody Map<String, Object> req) {
@@ -154,7 +146,6 @@ public class IssueController {
             return ResponseEntity.notFound().build();
         }
 
-        // If there's a fine, it must be paid
         if (issue.getFineCalculated() > 0 && !finePaid) {
             return ResponseEntity.badRequest().body(
                     ApiResponse.builder().success(false)
@@ -167,7 +158,6 @@ public class IssueController {
         if (!remarks.isBlank()) issue.setRemarks(remarks);
         issueRepository.save(issue);
 
-        // Mark book as available again
         bookRepository.findBySerialNo(issue.getBookSerialNo()).ifPresent(book -> {
             book.setStatus("AVAILABLE");
             bookRepository.save(book);
@@ -178,7 +168,6 @@ public class IssueController {
         );
     }
 
-    // Get issue details for return/pay-fine screens
     @GetMapping("/by-serial/{serialNo}")
     public ResponseEntity<?> getIssueBySerial(@PathVariable String serialNo) {
         return issueRepository.findByBookSerialNoAndStatus(serialNo, "ISSUED")
@@ -188,14 +177,12 @@ public class IssueController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // Active issues report
     @GetMapping("/active")
     public ResponseEntity<?> getActiveIssues() {
         List<Issue> active = issueRepository.findByStatus("ISSUED");
         return ResponseEntity.ok(ApiResponse.builder().success(true).data(active).build());
     }
 
-    // Overdue returns report
     @GetMapping("/overdue")
     public ResponseEntity<?> getOverdueIssues() {
         List<Issue> overdue = issueRepository
@@ -203,7 +190,6 @@ public class IssueController {
         return ResponseEntity.ok(ApiResponse.builder().success(true).data(overdue).build());
     }
 
-    // Issue requests (pending)
     @GetMapping("/pending")
     public ResponseEntity<?> getPendingIssues() {
         List<Issue> pending = issueRepository.findByStatus("PENDING_FINE");

@@ -19,21 +19,18 @@ public class MembershipController {
 
     private final MembershipRepository membershipRepository;
 
-    // Get all memberships
     @GetMapping
     public ResponseEntity<?> getAllMemberships() {
         List<Membership> list = membershipRepository.findAll();
         return ResponseEntity.ok(ApiResponse.builder().success(true).data(list).build());
     }
 
-    // Get active memberships
     @GetMapping("/active")
     public ResponseEntity<?> getActiveMemberships() {
         List<Membership> list = membershipRepository.findByStatus("ACTIVE");
         return ResponseEntity.ok(ApiResponse.builder().success(true).data(list).build());
     }
 
-    // Get by membership ID
     @GetMapping("/{membershipId}")
     public ResponseEntity<?> getByMembershipId(@PathVariable String membershipId) {
         return membershipRepository.findByMembershipId(membershipId)
@@ -41,7 +38,6 @@ public class MembershipController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // Add new membership (Admin only)
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> addMembership(@RequestBody Membership membership) {
@@ -56,7 +52,6 @@ public class MembershipController {
             );
         }
 
-        // Auto-generate membership ID
         long count = membershipRepository.count();
         String membershipId = String.format("MEM%05d", count + 1);
 
@@ -77,7 +72,6 @@ public class MembershipController {
         );
     }
 
-    // Update membership (Admin only) — extend or cancel
     @PutMapping("/{membershipId}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> updateMembership(@PathVariable String membershipId,

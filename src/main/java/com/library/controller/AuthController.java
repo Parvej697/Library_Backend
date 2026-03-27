@@ -24,7 +24,7 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
-    // ─── Admin / Staff Login ─────────────────────────────────────────
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody AuthDto.LoginRequest request) {
 
@@ -61,7 +61,7 @@ public class AuthController {
         );
     }
 
-    // ─── Get Current User ────────────────────────────────────────────
+
     @GetMapping("/me")
     public ResponseEntity<?> getCurrentUser(@RequestHeader("Authorization") String authHeader) {
         String token = authHeader.substring(7);
@@ -86,7 +86,7 @@ public class AuthController {
         );
     }
 
-    // ─── Member Signup ───────────────────────────────────────────────
+
     @PostMapping("/member-signup")
     public ResponseEntity<?> memberSignup(@RequestBody AuthDto.MemberSignupRequest request) {
 
@@ -110,7 +110,7 @@ public class AuthController {
             );
         }
 
-        // Duplicate check — pehle se account hai?
+
         Optional<Membership> existing = membershipRepository
                 .findByMembershipId(request.getMembershipId().toUpperCase());
 
@@ -131,11 +131,10 @@ public class AuthController {
             member.setPasswordHash(passwordHash);
             membershipRepository.save(member);
         } else {
-            // Bilkul naya member — record banao
-            // Auto-generate membership ID ya user ka diya hua use karo
+
             String membershipId = request.getMembershipId().toUpperCase();
 
-            // Name split karo first + last
+
             String[] nameParts = request.getName().trim().split(" ", 2);
             String firstName = nameParts[0];
             String lastName = nameParts.length > 1 ? nameParts[1] : "";
@@ -147,7 +146,7 @@ public class AuthController {
                     .passwordHash(passwordHash)
                     .status("ACTIVE")
                     .startDate(LocalDate.now())
-                    .endDate(LocalDate.now().plusYears(1)) // default 1 year
+                    .endDate(LocalDate.now().plusYears(1))
                     .membershipType("ONE_YEAR")
                     .pendingFine(0.0)
                     .build();
@@ -158,12 +157,11 @@ public class AuthController {
         return ResponseEntity.status(201).body(
                 AuthDto.ApiResponse.builder()
                         .success(true)
-                        .message("Account successfully create ho gaya! Ab login karo.")
+                        .message("Account successfully Created . Now! you can login.")
                         .build()
         );
     }
 
-    // ─── Member Login ────────────────────────────────────────────────
     @PostMapping("/member-login")
     public ResponseEntity<?> memberLogin(@RequestBody AuthDto.MemberLoginRequest request) {
 
@@ -171,7 +169,7 @@ public class AuthController {
             return ResponseEntity.badRequest().body(
                     AuthDto.ApiResponse.builder()
                             .success(false)
-                            .message("Membership ID aur password required hain.")
+                            .message("Membership ID and password are required.")
                             .build()
             );
         }

@@ -29,11 +29,10 @@ public class Issue {
 
     private LocalDate issueDate;
 
-    private LocalDate expectedReturnDate; // issueDate + 15 days
+    private LocalDate expectedReturnDate;
 
     private LocalDate actualReturnDate;
 
-    // ISSUED, RETURNED, OVERDUE
     private String status;
 
     private Double fineCalculated;
@@ -42,6 +41,5 @@ public class Issue {
 
     private String remarks;
 
-    // BOOK or MOVIE
     private String itemType;
 }

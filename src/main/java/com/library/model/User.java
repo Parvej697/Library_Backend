@@ -26,9 +26,9 @@ public class User {
 
     private String name;
 
-    @JsonProperty("isAdmin")   // ✅ JSON mein "isAdmin" aayega
+    @JsonProperty("isAdmin")
     private boolean isAdmin;
 
-    @JsonProperty("isActive")  // ✅ isActive bhi same issue tha
+    @JsonProperty("isActive")
     private boolean isActive;
 }

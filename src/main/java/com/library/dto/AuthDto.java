@@ -41,7 +41,6 @@ public class AuthDto {
         private Object data;
     }
 
-    // ─── Member Signup Request ──────────────────────
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
@@ -51,7 +50,6 @@ public class AuthDto {
         private String password;
     }
 
-    // ─── Member Login Request ───────────────────────
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
@@ -60,7 +58,6 @@ public class AuthDto {
         private String password;
     }
 
-    // ─── Member Login Response ──────────────────────
     @Data
     @Builder
     @NoArgsConstructor

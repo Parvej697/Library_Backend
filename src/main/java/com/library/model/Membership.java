@@ -21,7 +21,7 @@ public class Membership {
     private String id;
 
     @Indexed(unique = true)
-    private String membershipId; // Auto-generated: MEM00001
+    private String membershipId;
 
     private String firstName;
 
@@ -39,11 +39,9 @@ public class Membership {
 
     private LocalDate endDate;
 
-    // ACTIVE, INACTIVE, CANCELLED
     private String status;
 
     private Double pendingFine;
 
-    // SIX_MONTHS, ONE_YEAR, TWO_YEARS
     private String membershipType;
 }

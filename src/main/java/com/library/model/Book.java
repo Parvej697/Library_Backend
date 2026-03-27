@@ -19,19 +19,17 @@ public class Book {
     @Id
     private String id;
 
-    // SC(B)000001 for Science Book, SC(M)000001 for Science Movie, etc.
     private String serialNo;
 
     private String name;
 
     private String authorName;
 
-    private String category; // Science, Economics, Fiction, Children, Personal Development
+    private String category;
 
-    // BOOK or MOVIE
+
     private String type;
 
-    // AVAILABLE, ISSUED, LOST, DAMAGED
     private String status;
 
     private Double cost;

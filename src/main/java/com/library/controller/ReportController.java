@@ -21,35 +21,30 @@ public class ReportController {
     private final MembershipRepository membershipRepository;
     private final IssueRepository issueRepository;
 
-    // Master list of books
     @GetMapping("/books")
     public ResponseEntity<?> masterListBooks() {
         return ResponseEntity.ok(ApiResponse.builder().success(true)
                 .data(bookRepository.findByType("BOOK")).build());
     }
 
-    // Master list of movies
     @GetMapping("/movies")
     public ResponseEntity<?> masterListMovies() {
         return ResponseEntity.ok(ApiResponse.builder().success(true)
                 .data(bookRepository.findByType("MOVIE")).build());
     }
 
-    // Master list of memberships
     @GetMapping("/memberships")
     public ResponseEntity<?> masterListMemberships() {
         return ResponseEntity.ok(ApiResponse.builder().success(true)
                 .data(membershipRepository.findAll()).build());
     }
 
-    // Active issues
     @GetMapping("/active-issues")
     public ResponseEntity<?> activeIssues() {
         List<Issue> issues = issueRepository.findByStatus("ISSUED");
         return ResponseEntity.ok(ApiResponse.builder().success(true).data(issues).build());
     }
 
-    // Overdue returns
     @GetMapping("/overdue")
     public ResponseEntity<?> overdueReturns() {
         List<Issue> overdue = issueRepository
@@ -63,7 +58,6 @@ public class ReportController {
         return ResponseEntity.ok(ApiResponse.builder().success(true).data(overdue).build());
     }
 
-    // Issue requests (pending returns)
     @GetMapping("/issue-requests")
     public ResponseEntity<?> issueRequests() {
         List<Issue> pending = issueRepository.findByStatus("PENDING_FINE");
