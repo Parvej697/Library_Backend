@@ -47,11 +47,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String username = jwtUtil.extractUsername(token);
         boolean isAdmin = jwtUtil.extractIsAdmin(token);
 
-        System.out.println("JWT USER: " + username);
-        System.out.println("IS ADMIN: " + isAdmin);
-
-
-
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 User user = userRepository.findByUsername(username).orElse(null);
 

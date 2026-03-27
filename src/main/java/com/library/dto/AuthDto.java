@@ -1,5 +1,6 @@
 package com.library.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,7 +24,10 @@ public class AuthDto {
         private String token;
         private String username;
         private String name;
+
+        @JsonProperty("isAdmin")   // ✅ KEY FIX: "admin" ki jagah "isAdmin" aayega response mein
         private boolean isAdmin;
+
         private String message;
     }
 
