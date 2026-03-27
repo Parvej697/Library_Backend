@@ -25,7 +25,7 @@ public class AuthDto {
         private String username;
         private String name;
 
-        @JsonProperty("isAdmin")   // ✅ KEY FIX: "admin" ki jagah "isAdmin" aayega response mein
+        @JsonProperty("isAdmin")
         private boolean isAdmin;
 
         private String message;
@@ -39,5 +39,36 @@ public class AuthDto {
         private boolean success;
         private String message;
         private Object data;
+    }
+
+    // ─── Member Signup Request ──────────────────────
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MemberSignupRequest {
+        private String membershipId;
+        private String name;
+        private String password;
+    }
+
+    // ─── Member Login Request ───────────────────────
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MemberLoginRequest {
+        private String membershipId;
+        private String password;
+    }
+
+    // ─── Member Login Response ──────────────────────
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MemberLoginResponse {
+        private String token;
+        private String membershipId;
+        private String name;
+        private String message;
     }
 }

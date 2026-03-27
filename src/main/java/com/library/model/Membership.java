@@ -25,6 +25,8 @@ public class Membership {
 
     private String firstName;
 
+    private String passwordHash;
+
     private String lastName;
 
     private String contactNumber;
